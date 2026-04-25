@@ -1,102 +1,341 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>My ASCII Page</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蔡杭 echo · 个人主页</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-light:#f7f8fc;
+  --accent:#8a65db;
+  --deep:#1d2366;
+  --card-bg:#ffffff;
+  --text-dark:#2c2c2c;
+  --tag-bg:#eef0fa;
+  --tag-hover:#dcd7f8;
+}
+
+/* 全局 */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Noto Sans SC','Poppins',sans-serif;
+  background:linear-gradient(135deg,#bfa2ff,#88a7ff);
+  color:var(--text-dark);
+  scroll-behavior:smooth;
+  filter: contrast(1.05) brightness(0.97) saturate(1.1);
+  padding-bottom:50px;
+}
+
+/* 导航栏 */
+nav{
+  position:sticky;
+  top:0;
+  background:var(--deep);
+  padding:16px 0;
+  text-align:center;
+  z-index:10;
+}
+nav a{
+  margin:0 28px; /* 增大间距 */
+  color:white;
+  text-decoration:none;
+  font-weight:600;
+  transition:0.3s;
+}
+nav a:hover{color:var(--accent);}
+
+/* Hero */
+.hero{
+  text-align:center;
+  padding:120px 20px 80px;
+  color:white;
+  overflow:hidden;
+  position:relative;
+}
+.hero h1{
+  font-size:48px;
+  font-weight:700;
+  margin-bottom:10px;
+  line-height:1.2;
+  font-family:'Poppins',sans-serif;
+}
+.hero h1 span {display:block;}
+.hero p{
+  font-size:18px;
+  margin-top:10px;
+  font-family:'Noto Sans SC',sans-serif;
+  line-height:1.6;
+}
+.hero-img-wrapper{margin-top:30px;}
+.hero-img{
+  width:180px;
+  border-radius:12px;
+  border:4px dashed #fff;
+  box-shadow:0 0 15px rgba(255,255,255,0.5);
+  animation:float 4s ease-in-out infinite;
+}
+
+/* Hero 开场动画 */
+.hero-title,.hero-subtitle,.hero-img-wrapper,.hero-btn-wrapper{
+  opacity:0;
+  transform:translateY(30px) scale(0.95);
+  transition:all 0.8s ease-out;
+}
+.hero.anim .hero-title{opacity:1;transform:translateY(0) scale(1);}
+.hero.anim .hero-subtitle{opacity:1;transform:translateY(0) scale(1);transition-delay:0.2s;}
+.hero.anim .hero-img-wrapper{opacity:1;transform:translateY(0) scale(1);transition-delay:0.4s;}
+.hero.anim .hero-btn-wrapper{opacity:1;transform:translateY(0) scale(1);transition-delay:0.6s;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+/* 下载按钮动画 */
+.btn-white{
+  background:linear-gradient(135deg,#fff 0%,#ffe6f7 100%);
+  color:var(--deep);
+  display:inline-block;
+  padding:14px 32px;
+  border-radius:12px;
+  font-weight:700;
+  text-decoration:none;
+  box-shadow:0 8px 15px rgba(0,0,0,0.2);
+  transition:0.3s;
+  animation:btnFloat 2s ease-in-out infinite;
+}
+.btn-white:hover{
+  background:linear-gradient(135deg,#8a65db,#bfa2ff);
+  color:white;
+  transform:scale(1.05);
+}
+@keyframes btnFloat{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.05);}
+}
+
+/* 卡片 */
+.section-card{
+  background:var(--card-bg);
+  border-radius:16px;
+  padding:36px;
+  margin:50px auto;
+  max-width:960px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.08);
+  opacity:0;
+  transform:translateY(40px);
+  transition:all 0.8s ease-out;
+}
+.section-card.visible{opacity:1;transform:translateY(0);}
+.tag{display:inline-block;background:var(--tag-bg);margin:8px 10px;padding:10px 16px;border-radius:24px;font-weight:600;}
+.tag:hover{background:var(--tag-hover);}
+
+/* 网格布局 */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px;margin-top:30px;}
+
+/* 实习经历 */
+.intern-card{
+  position:relative;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,0.18);
+  cursor:pointer;
+  transition:0.3s;
+  opacity:0;
+  transform:translateY(30px);
+  height:240px;
+  display:flex;
+  align-items:flex-end; /* 图片靠下 */
+  justify-content:center;
+  text-align:center;
+}
+.intern-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:16px;
+  display:block;
+  transition:transform 0.3s;
+}
+.intern-card:hover img{transform:scale(1.03);}
+.intern-text{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:85%;
+  color:white;
+  text-shadow:1px 1px 5px rgba(0,0,0,0.6);
+}
+.intern-text .company{font-size:1.3rem;font-weight:700;}
+.intern-text .role{font-size:1rem;margin-top:6px;}
+
+/* 相关作品卡片 */
+.portfolio-item{
+  background:var(--card-bg);
+  border-radius:12px;
+  padding:12px;
+  max-width:220px;
+  margin:auto;
+  box-shadow:0 4px 18px rgba(0,0,0,0.08);
+  cursor:pointer;
+  transition:0.3s;
+  opacity:0;
+  transform:translateY(20px);
+  animation:cardFloat 4s ease-in-out infinite;
+}
+.portfolio-item.visible{opacity:1;transform:translateY(0);}
+.portfolio-item:hover{transform:scale(1.03);box-shadow:0 6px 20px rgba(0,0,0,0.12);}
+.portfolio-item img{width:100%;border-radius:6px;}
+.portfolio-item p{text-align:center;font-weight:500;margin-top:6px;font-size:0.9rem;}
+@keyframes cardFloat{
+  0%,100%{transform:translateY(0) rotate(0deg);}
+  25%{transform:translateY(-3px) rotate(-0.5deg);}
+  50%{transform:translateY(-1px) rotate(0.5deg);}
+  75%{transform:translateY(-2px) rotate(-0.5deg);}
+}
+
+/* 联系 */
+.contact{text-align:center;padding:60px 20px;background:#ececff;}
+
+/* Footer */
+footer{background:var(--deep);color:#ccc;text-align:center;padding:20px;margin-top:40px;}
+
+/* 创意粒子效果 */
+.hero::after{
+  content:"";
+  position:absolute;
+  top:0; left:0; right:0; bottom:0;
+  background:radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size:10px 10px;
+  pointer-events:none;
+}
+</style>
 </head>
 <body>
 
-<pre>
-+-----------------------------------------------------------------------+
-| 【导航栏 - 固定置顶】                                                 |
-| 首页 | 关于我 | 核心能力 | 实习经历 | 校园经历 | 作品集 | 联系我      |
-+-----------------------------------------------------------------------+
+<!-- 导航 -->
+<nav>
+<a href="#hero">首页</a>
+<a href="#skills">核心能力</a>
+<a href="#experience">实习经历</a>
+<a href="#portfolio">相关作品</a>
+<a href="#contact">联系我</a>
+</nav>
 
-+-----------------------------------------------------------------------+
-| 【首页 - 首屏 Hero】                                                  |
-|                                                                       |
-|                        蔡杭 · 个人求职官网                             |
-|            新媒体运营 | 海外市场营销 | 内容运营 | 品牌推广             |
-|                                                                       |
-|                    [ 查看作品集 ]  [ 下载简历PDF ]                    |
-|                                                                       |
-+-----------------------------------------------------------------------+
+<!-- Hero -->
+<section id="hero" class="hero">
+<h1 class="hero-title"><span>蔡杭</span><span>echo</span></h1>
+<p class="hero-subtitle">新闻与传播硕士在读 | 商务英语本科 | 中共党员</p>
+<p class="hero-subtitle">新媒体运营 · 海外市场 · 内容运营 · 品牌推广</p>
+<div class="hero-img-wrapper">
+<img src="hero_character.png" alt="虚拟人物头像" class="hero-img">
+</div>
+<div class="hero-btn-wrapper">
+<a href="简历及作品集.pdf" class="btn-white" download>下载简历及作品集</a>
+</div>
+</section>
 
-+-----------------------------------------------------------------------+
-| 【关于我】                                                            |
-| 姓名：蔡杭          出生：2002.12.25        政治面貌：中共党员         |
-| 电话/微信：18948374802        邮箱：24hcai@stu.edu.cn                 |
-| 学历：新闻与传播硕士在读 | 商务英语本科                              |
-| 定位：双语内容 | 新媒体全流程 | 摄影摄像 | 文案策划 | 海外推广        |
-+-----------------------------------------------------------------------+
+<!-- 核心能力 -->
+<section id="skills" class="section-card">
+<h2>核心能力</h2>
+<div>
+<span class="tag">内容运营</span>
+<span class="tag">文案创作</span>
+<span class="tag">视觉设计</span>
+<span class="tag">双语能力</span>
+<span class="tag">视频剪辑</span>
+<span class="tag">数据成果</span>
+<span class="tag">AI赋能</span>
+</div>
+</section>
 
-+-----------------------------------------------------------------------+
-| 【核心能力 - 置顶展示】                                               |
-| 内容运营：公众号/微博/抖音全平台运营、推文策划、热点捕捉              |
-| 文案创作：新闻稿、采访稿、软文、双语内容、学术文章                    |
-| 视觉制作：相机拍摄、PS/PR/剪映、海报设计、视频成片                     |
-| 语言能力：专四专八、四六级、普通话二甲、中英双语                      |
-| 工具技能：秀米、135、Canva、WPS、无人机、独立站搭建                   |
-| 数据成果：统筹推文60+篇、1w+阅读25篇、作品总量100+                     |
-+-----------------------------------------------------------------------+
+<!-- 实习经历 -->
+<section id="experience" class="section-card">
+<h2>实习经历</h2>
+<div class="grid">
+<div class="portfolio-item">
+<img src="hua_da_gene.png" alt="深圳华大基因">
+<div class="intern-text">
+<div class="company">深圳华大基因</div>
+<div class="role">电商运营·海外宣发·社群5000+·GMV 100万+</div>
+</div>
+</div>
+<div class="portfolio-item">
+<img src="jie_yang_daily.png" alt="揭阳日报社">
+<div class="intern-text">
+<div class="company">揭阳日报社</div>
+<div class="role">新闻采编·人物采访·现场报道</div>
+</div>
+</div>
+<div class="portfolio-item">
+<img src="jie_yang_hailian.png" alt="揭阳海联五金">
+<div class="intern-text">
+<div class="company">揭阳海联五金</div>
+<div class="role">产品拍摄·宣传片制作·海外独立站设计</div>
+</div>
+</div>
+</div>
+</section>
 
-+-----------------------------------------------------------------------+
-| 【实习经历 - 顺序：华大 → 海联 → 日报社】                             |
-| ① 深圳华大基因 | 市场营销与品牌推广 | 2025.06-2026.02                 |
-|   - 商品详情页优化、卖点提炼、提升转化                               |
-|   - 新品海外宣发、英文素材整理                                       |
-|   - 电商图文/短视频制作、多渠道投放                                   |
-|   - 5000+人社群运营、SOP搭建、数据迭代                               |
-|   - 618/双11助播，单场GMV 100万+                                     |
-|                                                                       |
-| ② 揭阳海联五金 | 综合内容运营 | 2026.02-2026.04                      |
-|   - 产品拍摄、企业宣传片制作                                         |
-|   - 海外独立站设计、商城功能规划                                     |
-|   - 海外市场分析、竞品调研                                           |
-|   - 广交会翻译、海外商务谈判                                         |
-|                                                                       |
-| ③ 揭阳日报社 | 实习记者/采编 | 2024.12-2025.02                       |
-|   - 活动跟拍、照片见报                                               |
-|   - 人物采访、通讯稿撰写                                             |
-|   - 新闻稿、现场活动报道                                             |
-+-----------------------------------------------------------------------+
+<!-- 相关作品 -->
+<section id="portfolio" class="section-card">
+<h2>相关作品</h2>
+<div class="grid">
+<div class="portfolio-item" onclick="window.open('https://mp.weixin.qq.com/s/RaN9p6duKdm6lsIKPV_1HA','_blank')">
+<img src="article1.png" alt="校园活动统筹"><p>校园活动统筹</p>
+</div>
+<div class="portfolio-item" onclick="window.open('https://mp.weixin.qq.com/s/OJ9bZtBX9ofxcMonGL9Ryw','_blank')">
+<img src="article2.png" alt="文案编辑"><p>文案编辑</p>
+</div>
+<div class="portfolio-item" onclick="window.open('https://mp.weixin.qq.com/s/FMbRYjYMAXp_yjEHU9a69w','_blank')">
+<img src="article3.png" alt="官方会议报导"><p>官方会议报导</p>
+</div>
+<div class="portfolio-item" onclick="window.open('https://mp.weixin.qq.com/s/Kuf5-08vTBdwWDvxGRU-ng','_blank')">
+<img src="article4.png" alt="大型展会回顾"><p>大型展会回顾</p>
+</div>
+<div class="portfolio-item" onclick="window.open('https://mp.weixin.qq.com/s/4AvF-3W4FIumfmANdzXrMw','_blank')">
+<img src="article5.png" alt="双语推文撰写"><p>双语推文撰写</p>
+</div>
+<div class="portfolio-item" onclick="window.open('https://mp.weixin.qq.com/s/cqC2HDrtVApak1ypcJKjNw','_blank')">
+<img src="article6.png" alt="可画排版推文"><p>可画排版推文</p>
+</div>
+<div class="portfolio-item" onclick="window.open('https://mp.weixin.qq.com/s/p8KJe2xtU0IDlPLdRXCnuw','_blank')">
+<img src="article7.png" alt="科研专家专访"><p>科研专家专访</p>
+</div>
+<div class="portfolio-item" onclick="window.open('https://mp.weixin.qq.com/s/vlqeZbHYViEKlp5sZurIig','_blank')">
+<img src="article8.png" alt="市级活动跟场"><p>市级活动跟场</p>
+</div>
+<div class="portfolio-item" onclick="window.open('https://mp.weixin.qq.com/s/SlhGLEL961S7RmUwLDnDHA','_blank')">
+<img src="article9.png" alt="人物访谈全流程"><p>人物访谈全流程</p>
+</div>
+</div>
+</section>
 
-+-----------------------------------------------------------------------+
-| 【校园经历 - 新增完整模块】                                          |
-| 1. 广东以色列理工学院 | 双语内容策划 | 2025.05-至今                   |
-|    运营公众号、双语海报/推文制作、内容优化                            |
-|                                                                       |
-| 2. 校新媒体中心主席团 | 官微运营 | 2020.10-2023.09                    |
-|    统筹全平台、活动拍摄、校友采访；统筹推文60+篇，25篇阅读破1万       |
-|                                                                       |
-| 3. 外文学院新媒体 | 采编总负责人 | 2021.09-2023.09                    |
-|    文稿编辑、采访稿、新闻稿撰写、校对                                 |
-|                                                                       |
-| 4. 学生党支部 | 宣传委员 | 2023.09-2024.06                            |
-|    新闻稿、拍摄剪辑、双语微党课栏目策划                               |
-|                                                                       |
-| 5. 三下乡 | 领队/宣传组长 | 2022&2023                                 |
-|    活动统筹、推文/视频全流程制作                                      |
-+-----------------------------------------------------------------------+
+<!-- 联系 -->
+<section id="contact" class="contact">
+<h2>联系我</h2>
+<p>📞 <a href="tel:18948374802">18948374802</a></p>
+<p>📧 <a href="mailto:24hcai@stu.edu.cn">24hcai@stu.edu.cn</a></p>
+</section>
 
-+-----------------------------------------------------------------------+
-| 【作品集 - 点击预览】                                                 |
-|   [公众号推文]  [海报设计]  [新闻采访]  [产品拍摄]  [宣传视频]        |
-|           点击 → 弹出大图 / 跳转外链 / 显示二维码                      |
-+-----------------------------------------------------------------------+
+<footer>
+© Cai Hang 2026 | All Rights Reserved
+</footer>
 
-+-----------------------------------------------------------------------+
-| 【联系我】                                                            |
-| 电话：18948374802      → 点击拨号                                    |
-| 邮箱：24hcai@stu.edu.cn → 点击发邮件                                  |
-| 求职意向：新媒体运营 | 海外市场营销 | 内容运营 | 品牌推广             |
-+-----------------------------------------------------------------------+
+<script>
+// Hero 开场动画
+window.addEventListener('load', ()=>{
+  document.querySelector('#hero').classList.add('anim');
+});
 
-+-----------------------------------------------------------------------+
-| 【底部 - 返回顶部】                                                   |
-| © 蔡杭 2026 | 新媒体·海外营销·内容运营 | ↑ 返回顶部                   |
-+-----------------------------------------------------------------------+
-</pre>
+// 滚动渐显动画
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+    }
+  });
+},{threshold:0.2});
+document.querySelectorAll('.section-card,.portfolio-item,.intern-card').forEach(el=>observer.observe(el));
+</script>
 
 </body>
 </html>
